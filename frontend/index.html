@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treinamento de CNN Interativo</title>
+  <!-- Fontes modernas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <!-- Background dinâmico e suave -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+
+  <main class="app-container">
+    <header class="glass-header">
+      <h1>Redes Convolucionais</span></h1>
+      </p>
+    </header>
+
+    <!-- SEÇÃO 1: Coleta de Dados -->
+    <section class="layer-group data-collection-section">
+      <h2>1. Coleta de Dados</h2>
+      <p class="layer-desc" style="margin-bottom: 2rem;">A Inteligência Artificial aprende por exemplos. Envie fotos do
+        que ela deve reconhecer e exemplos do que ela deve ignorar.</p>
+
+      <div class="didactic-grid">
+        <div class="didactic-card">
+          <h3>✅ O que procurar? (Ex: Bicicletas)</h3>
+          <p class="analogy" style="margin-bottom: 1rem;">Envie de 3 a 10 imagens do seu objeto alvo.</p>
+          <input type="file" id="uploadClass1" accept="image/*" multiple style="display: none;" />
+          <button id="btnClass1" class="btn accent" disabled>Subir Imagens (Alvo)</button>
+          <div id="countClass1" class="count-badge" style="margin-top: 1rem;">0 imagens</div>
+          <div id="previewClass1" class="image-preview-container"></div>
+        </div>
+
+        <div class="didactic-card">
+          <h3>❌ O que NÃO é? (Ex: Fundo/Carros)</h3>
+          <p class="analogy" style="margin-bottom: 1rem;">Para aprender, a IA precisa de exemplos negativos.</p>
+          <input type="file" id="uploadClass2" accept="image/*" multiple style="display: none;" />
+          <button id="btnClass2" class="btn secondary" disabled>Subir Imagens (Outros)</button>
+          <div id="countClass2" class="count-badge" style="margin-top: 1rem;">0 imagens</div>
+          <div id="previewClass2" class="image-preview-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 2: Treinamento -->
+    <section class="layer-group training-section">
+      <h2>2. Treinamento (Ajustando os Filtros)</h2>
+      <p class="layer-desc">Ao clicar no botão abaixo, a rede tenta diferenciar as classes. Ela ajusta matematicamente
+        seus "filtros convolucionais" a cada rodada (Época) para diminuir os erros (Loss).</p>
+
+      <div class="controls" style="margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+        <button id="trainBtn" class="btn primary" disabled>Iniciar Treinamento</button>
+        <div id="trainingStatus" class="status-badge">Carregando MobileNet pré-treinado...</div>
+
+        <div class="progress-bar-container hidden" id="trainProgress">
+          <div class="progress-bar-fill" id="trainProgressFill"></div>
+        </div>
+        <div id="lossText" class="layer-desc hidden"
+          style="font-family: var(--font-mono); margin-top: 0.5rem; font-weight: bold;"></div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 3: Inferência e Explicação Visual -->
+    <section class="layer-group inference-section">
+      <h2>3. Teste a IA (Inferência)</h2>
+      <p class="layer-desc">Envie uma imagem NOVA que a IA não viu durante o treino para testar o que ela aprendeu.</p>
+
+      <div class="controls" style="margin-top: 1.5rem;">
+        <input type="file" id="uploadTest" accept="image/*" style="display: none;" />
+        <button id="btnTest" class="btn accent" disabled>Subir Nova Imagem de Teste</button>
+        <button id="runInferenceBtn" class="btn secondary" disabled>Fazer Raio-X da Detecção!</button>
+      </div>
+    </section>
+
+    <!-- Visualizador da Rede (Invisível até rodar a inferência) -->
+    <section id="networkVisualizer" class="network-container hidden">
+      <h2 style="text-align: center; color: var(--accent-primary); margin-top: 1rem; font-size: 2rem;">Raio-X da CNN 🔍
+      </h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Veja como a rede decompõe a
+        imagem para tomar sua decisão.</p>
+
+      <!-- Input Layer -->
+      <div class="layer-group">
+        <h2>Input (Imagem Recebida)</h2>
+        <div class="canvas-wrapper input-wrapper">
+          <canvas id="canvasInput" width="128" height="128"
+            style="background: transparent; border: none; box-shadow: none; border-radius: 8px;"></canvas>
+        </div>
+        <p class="layer-desc">A imagem é redimensionada para 64x64 pixels para processamento veloz.</p>
+      </div>
+
+      <div class="connector">↓</div>
+
+      <!-- Conv2D Layer -->
+      <div class="layer-group">
+        <h2>O que a IA procura? (Convolução + ReLU)</h2>
+        <div id="convOutputs" class="canvas-grid"></div>
+        <p class="layer-desc">Cada quadrado preto é um <strong>filtro de detecção de padrões</strong> (ex: curvas,
+          linhas). A luz branca mostra onde a IA "encontrou" esse padrão na foto!</p>
+      </div>
+
+      <div class="connector">↓</div>
+
+      <!-- MaxPooling Layer -->
+      <div class="layer-group">
+        <h2>Resumindo a informação (Max Pooling)</h2>
+        <div id="poolOutputs" class="canvas-grid"></div>
+        <p class="layer-desc">A rede encolhe as imagens filtradas pela metade. Ela ignora os espaços vazios e foca
+          intensamente apenas nos padrões que foram ativados.</p>
+      </div>
+
+      <div class="connector">↓</div>
+
+      <!-- Dense / Output Layer -->
+      <div class="layer-group output-group">
+        <h2>É uma bicicleta?</h2>
+        <div id="classOutputs" class="class-bars"></div>
+
+        <div class="softmax-explanation hidden" id="softmaxExplanation">
+          <h3>A Matemática por Trás da Decisão</h3>
+          <p>A fórmula Softmax converte as pontuações brutas (<em>Logits</em>) extraídas da imagem em probabilidades de
+            0 a 100%. Ela utiliza a constante de Euler (<strong>e &approx; 2.718</strong>) para amplificar as diferenças
+            matemáticas entre as classes.</p>
+
+          <div class="math-box">
+            <code>P(Classe) = e<sup>pontuação da classe</sup> / &Sigma; (e<sup>todas as pontuações</sup>)</code>
+          </div>
+
+          <h4>Cálculos Exatos Desta Inferência:</h4>
+          <ul class="math-steps" id="mathSteps">
+            <!-- Preenchido dinamicamente via JS com os logits reais -->
+          </ul>
+          <p id="mathConclusion" style="margin-top: 1rem; color: #f8fafc; font-weight: 600;"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
