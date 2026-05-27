@@ -28,27 +28,18 @@
     <!-- SEÇÃO 1: Coleta de Dados -->
     <section class="layer-group data-collection-section">
       <h2>1. Coleta de Dados</h2>
-      <p class="layer-desc" style="margin-bottom: 2rem;">A Inteligência Artificial aprende por exemplos. Envie fotos do
-        que ela deve reconhecer e exemplos do que ela deve ignorar.</p>
+      <p class="layer-desc" style="margin-bottom: 2rem;">A Inteligência Artificial aprende por exemplos. Envie fotos dos objetos que ela deve classificar.</p>
 
-      <div class="didactic-grid">
-        <div class="didactic-card">
-          <h3>✅ O que procurar? (Ex: Bicicletas)</h3>
-          <p class="analogy" style="margin-bottom: 1rem;">Envie de 3 a 10 imagens do seu objeto alvo.</p>
-          <input type="file" id="uploadClass1" accept="image/*" multiple style="display: none;" />
-          <button id="btnClass1" class="btn accent" disabled>Subir Imagens (Alvo)</button>
-          <div id="countClass1" class="count-badge" style="margin-top: 1rem;">0 imagens</div>
-          <div id="previewClass1" class="image-preview-container"></div>
-        </div>
+      <!-- Grid dinâmico onde as classes serão inseridas via JavaScript -->
+      <div id="classesContainer" class="didactic-grid">
+        <!-- Preenchido dinamicamente via JS com Moto, Bicicleta e Carro -->
+      </div>
 
-        <div class="didactic-card">
-          <h3>❌ O que NÃO é? (Ex: Fundo/Carros)</h3>
-          <p class="analogy" style="margin-bottom: 1rem;">Para aprender, a IA precisa de exemplos negativos.</p>
-          <input type="file" id="uploadClass2" accept="image/*" multiple style="display: none;" />
-          <button id="btnClass2" class="btn secondary" disabled>Subir Imagens (Outros)</button>
-          <div id="countClass2" class="count-badge" style="margin-top: 1rem;">0 imagens</div>
-          <div id="previewClass2" class="image-preview-container"></div>
-        </div>
+      <!-- Botão para adicionar novas classes dinamicamente -->
+      <div style="display: flex; justify-content: center; margin-top: 2rem;">
+        <button id="addClassBtn" class="btn secondary" style="display: flex; align-items: center; gap: 0.5rem;">
+          ➕ Adicionar Nova Classe
+        </button>
       </div>
     </section>
 
@@ -79,6 +70,16 @@
         <input type="file" id="uploadTest" accept="image/*" style="display: none;" />
         <button id="btnTest" class="btn accent" disabled>Subir Nova Imagem de Teste</button>
         <button id="runInferenceBtn" class="btn secondary" disabled>Fazer Raio-X da Detecção!</button>
+      </div>
+      <!-- Ajuste da Sensibilidade de Detecção (Similaridade) -->
+      <div class="slider-group" style="margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        <label for="thresholdSlider" style="font-size: 0.95rem; font-weight: 600; color: var(--text-secondary);">
+          Sensibilidade de Reconhecimento: <span id="thresholdVal" style="color: var(--accent-secondary); font-family: var(--font-mono); font-weight: 700;">55%</span>
+        </label>
+        <input type="range" id="thresholdSlider" min="0" max="100" value="55" class="custom-slider" style="width: 100%; max-width: 400px; cursor: pointer;" />
+        <p class="layer-desc" style="margin-top: 0.25rem; font-size: 0.8rem; text-align: center; max-width: 500px;">
+          Se a similaridade visual da imagem de teste for abaixo deste limite, a IA classificará como "Desconhecido / Não é nenhum dos três".
+        </p>
       </div>
     </section>
 
