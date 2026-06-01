@@ -1,16 +1,4 @@
-// ============================================================
-// TREINAMENTO MULTICLASSE (TRANSFER LEARNING)
-// ============================================================
-tra// ============================================================
-// DECISÃO DE INFERÊNCIA & APRESENTAÇÃO
-// ============================================================
-function evaluateInference(logits, probs, maxSimilarity, closestClass) {
-  console.log("TODO: Implementar Decisão e Slider (Commit 6)");
-}
-nBtn.addEventListener('click', async () => {
-  console.log("TODO: Implementar Treinamento Multiclasse (Commit 4)");
-});
-ort * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs';
 
 // ============================================================
 // ARQUITETURA: Transfer Learning com MobileNet
@@ -410,14 +398,7 @@ uploadTest.addEventListener('change', async (e) => {
   lastInferenceResults = null;
 });
 
-// Função de Cosseno Math
-function cosineSimilarity(a, b) {
-  return tf.tidy(() => {
-    const aNorm = tf.div(a, tf.norm(a).add(1e-5));
-    const bNorm = tf.div(b, tf.norm(b).add(1e-5));
-    return tf.sum(tf.mul(aNorm, bNorm)).arraySync();
-  });
-}
+// TODO: Implementar Função de Cosseno Math (Commit 5)
 
 runInferenceBtn.addEventListener('click', async () => {
   if (!classifier || !testImageTensor) return;
@@ -483,33 +464,8 @@ runInferenceBtn.addEventListener('click', async () => {
 // DECISÃO DE INFERÊNCIA & APRESENTAÇÃO
 // ============================================================
 function evaluateInference(logits, probs, maxSimilarity, closestClass) {
-  const threshold = parseFloat(thresholdSlider.value);
-  const similarityPercent = maxSimilarity * 100;
-  
-  const container = outputContainers.class;
-  container.innerHTML = '';
-
-  const explanationBox = document.getElementById('softmaxExplanation');
-  const mathSteps = document.getElementById('mathSteps');
-  const mathConclusion = document.getElementById('mathConclusion');
-  explanationBox.classList.remove('hidden');
-
-  const winnerIdx = probs.indexOf(Math.max(...probs));
-  const isRecognized = similarityPercent >= threshold;
-
-  // Renderizar barras de probabilidade
-  classes.forEach((c, i) => {
-    const p = (probs[i] * 100).toFixed(1);
-    const isWinner = i === winnerIdx;
-    const barColor = isRecognized 
-      ? 'linear-gradient(90deg, var(--accent-secondary), var(--accent-primary))' 
-      : 'linear-gradient(90deg, #64748b, #475569)';
-
-    const row = document.createElement('div');
-    row.className = 'class-bar-row';
-    row.innerHTML = `
-      <div class="class-label" style="width: 200px; text-align: left; color: ${isWinner && isRecognized ? '#34d399' : 'inherit'}">
-        ${c.name} ${isWinner && isRecognized ? ' 🎯' : ''}
+  console.log("TODO: Implementar Decisão e Slider (Commit 6)");
+}
       </div>
       <div class="class-track">
         <div class="class-fill" style="width: ${p}%; background: ${barColor}"></div>
