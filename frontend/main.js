@@ -398,7 +398,14 @@ uploadTest.addEventListener('change', async (e) => {
   lastInferenceResults = null;
 });
 
-// TODO: Implementar Função de Cosseno Math (Commit 5)
+// Função de Cosseno Math
+function cosineSimilarity(a, b) {
+  return tf.tidy(() => {
+    const aNorm = tf.div(a, tf.norm(a).add(1e-5));
+    const bNorm = tf.div(b, tf.norm(b).add(1e-5));
+    return tf.sum(tf.mul(aNorm, bNorm)).arraySync();
+  });
+}
 
 runInferenceBtn.addEventListener('click', async () => {
   if (!classifier || !testImageTensor) return;
